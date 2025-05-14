@@ -1,0 +1,3 @@
+[submodule "blokkat-arabic-blockchain-developer-bootcamp-graduation-project/lib/forge-std"]
+	path = blokkat-arabic-blockchain-developer-bootcamp-graduation-project/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
