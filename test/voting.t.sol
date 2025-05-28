@@ -5,70 +5,67 @@ import "forge-std/Test.sol";
 import "../src/voting.sol";
 
 contract VotingTest is Test {
-  Voting public voting;
-  address public owner = address(this);    // The deployer, acts as owner
-  address public voter1 = address(0x1);    // Simulated user
-  
-  function setUp() public {
-    // Deploy contract — owner is address(this)
-    voting = new Voting();
-    // Add proposals from owner
-    
-    voting.create_proposal("Proposal A");
-    voting.create_proposal("Proposal B");
+    Voting public voting;
+    address public owner = address(this); // The deployer, acts as owner
+    address public voter1 = address(0x1); // Simulated user
 
-    //validate these proposals
-    (string memory name0, )=voting.getproposal(0);
-    (string memory name1, )=voting.getproposal(1);
+    function setUp() public {
+        // Deploy contract — owner is address(this)
+        voting = new Voting();
+        // Add proposals from owner
 
-    assertEq(name0, "Proposal A");
-    assertEq(name1, "Proposal B");
+        voting.create_proposal("Proposal A");
+        voting.create_proposal("Proposal B");
 
-  }  
-  
-  function testauthority() public view {
-    assertEq(voting.owner(), owner);
-  }
+        //validate these proposals
+        (string memory name0,) = voting.getproposal(0);
+        (string memory name1,) = voting.getproposal(1);
 
-  // Test that only the owner can create a proposal
-  function testOnlyOwnerCanCreate() public {
-    vm.prank(voter1);
-    vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, voter1));
-    voting.create_proposal("Unauthorized Proposal");
-  }
+        assertEq(name0, "Proposal A");
+        assertEq(name1, "Proposal B");
+    }
 
-  //Test that a proposal is created successfully by the owner
-  function testProposalCreatedCorrectly() public {
-    voting.create_proposal("Proposal C");
-    (string memory name, uint count) = voting.getproposal(2);
-    assertEq(name, "Proposal C");
-    assertEq(count, 0);
-  }
+    function testauthority() public view {
+        assertEq(voting.owner(), owner);
+    }
 
-  //Test that a user can vote once
-  function testUserCanVote() public {
-    vm.prank(voter1);
-    voting.vote(0);
-    (, uint vote_count) = voting.getproposal(0);
-    assertEq(vote_count, 1);
-  }
+    // Test that only the owner can create a proposal
+    function testOnlyOwnerCanCreate() public {
+        vm.prank(voter1);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.OwnableUnauthorizedAccount.selector, voter1));
+        voting.create_proposal("Unauthorized Proposal");
+    }
 
-  //Test that a user cannot vote twice
-  function testUserCannotVoteTwice() public {
-    vm.prank(voter1);
-    voting.vote(0);
+    //Test that a proposal is created successfully by the owner
+    function testProposalCreatedCorrectly() public {
+        voting.create_proposal("Proposal C");
+        (string memory name, uint256 count) = voting.getproposal(2);
+        assertEq(name, "Proposal C");
+        assertEq(count, 0);
+    }
 
-    vm.prank(voter1);
-    vm.expectRevert("Already voted");
-    voting.vote(1);
-  }
-  
-  
-  //Test that vote fails for invalid proposal index
-  function testInvalidProposalVoteFails() public {
-    vm.prank(voter1);
-    vm.expectRevert("proposal doesn't exist");
-    voting.vote(99);
-  }
+    //Test that a user can vote once
+    function testUserCanVote() public {
+        vm.prank(voter1);
+        voting.vote(0);
+        (, uint256 vote_count) = voting.getproposal(0);
+        assertEq(vote_count, 1);
+    }
 
+    //Test that a user cannot vote twice
+    function testUserCannotVoteTwice() public {
+        vm.prank(voter1);
+        voting.vote(0);
+
+        vm.prank(voter1);
+        vm.expectRevert("Already voted");
+        voting.vote(1);
+    }
+
+    //Test that vote fails for invalid proposal index
+    function testInvalidProposalVoteFails() public {
+        vm.prank(voter1);
+        vm.expectRevert("proposal doesn't exist");
+        voting.vote(99);
+    }
 }
