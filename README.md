@@ -105,7 +105,7 @@ ETHERSCAN_API_KEY=your_etherscan_api_key
 ## 🎥 Demo
 Watch the demo of the voting DApp in action:
 
-📽️ [Add Loom or YouTube link to demo here once complete]
+📽️ https://drive.google.com/file/d/1cjYpHUJaDL3p6eMXUj9a4--Btu52GWuF/view?usp=sharing
 
 ---
 ## ✅ Status
